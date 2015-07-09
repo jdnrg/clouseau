@@ -18,7 +18,7 @@ config = {
     'download_url': 'http://tbd.com',
     'author_email': 'bill@if.io',
     'version': '0.2.0',
-    'install_requires': ['jinja2','nose','nose-progressive'],
+    'install_requires': ['jinja2','nose'],
     'packages': ['clouseau','tests'],
     'package_data': {'clouseau': ['clients/*.py', 'patterns/*.txt', 'templates/*.html']},
     'py_modules': [],
