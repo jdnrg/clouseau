@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
@@ -9,17 +12,17 @@ import argparse as arse
 import pprint
 import sys
 import subprocess
-from clients import *
-from clients.colors import *
-from parser import Parser
-from commit_parser import CommitParser
-from terms_collector import TermsCollector
-from clouseau_model import ClouseauModel
+from .clients import *
+from .clients.colors import *
+from .parser import Parser
+from .commit_parser import CommitParser
+from .terms_collector import TermsCollector
+from .clouseau_model import ClouseauModel
 
 
 VERSION='0.2.0'
 
-class Clouseau:
+class Clouseau(object):
     """
     Wrap and delegate
     """
@@ -41,7 +44,7 @@ class Clouseau:
         if(not args['skip']):
             self.clone_repo( args['url'], args['repo_dir'] ) 
         else:
-            print blue( 'Skipping git-clone or git-pull as --skip was found on the command line.' )
+            print(blue( 'Skipping git-clone or git-pull as --skip was found on the command line.' ))
 
         if args['revlist'] != None and args['revlist'] != 'all':
             parser = CommitParser()
@@ -61,14 +64,14 @@ class Clouseau:
             _out = subprocess.check_output(['git', 'clone', url, destination])        
         
         except subprocess.CalledProcessError:
-            print blue( "Directory, %s, exits. Trying git-pull instead of clone." % destination )
+            print(blue( "Directory, %s, exits. Trying git-pull instead of clone." % destination ))
             _out = subprocess.check_output(['git', '--git-dir=%s/.git' % destination, 'pull'])       
-            print smoke( "Git says: %s" % _out )
+            print(smoke( "Git says: %s" % _out ))
             return _out
         
         except :
             e = sys.exc_info()[0]
-            print red( 'Problem writing to destination: %s' % destination ) 
+            print(red( 'Problem writing to destination: %s' % destination )) 
             raise
         
         return _out
@@ -83,7 +86,8 @@ class Clouseau:
         _pattern_path = os.path.join( _dir, _default_pattern_file )
         _temp = os.path.join( _dir, "../temp")
 
-        p = arse.ArgumentParser (prog="clouseau", description="  Clouseau: A silly git inspector", version=VERSION)
+        p = arse.ArgumentParser (prog="clouseau", description="  Clouseau: A silly git inspector")
+        p.add_argument('--version', action='version', version=VERSION)
         p.add_argument('--url', '-u', required=True,  action="store", dest="url",
                         help="The fully qualified git URL (http://www.kernel.org/pub/software/scm/git/docs/git-clone.html)")
         p.add_argument('--term', '-t', required=False, action="store", dest="term",

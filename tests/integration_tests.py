@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 from nose.tools import *
 from clouseau.clouseau import Clouseau
@@ -15,7 +16,7 @@ def console_client_test():
     terms = ['password']
     args = ['-u', 'https://github.com/virtix/cato.git']
     parsed = clouseau.parse_args( args )
-    print parsed
+    print(parsed)
     ids = parser.parse( terms=terms, repo=parsed['repo_dir'], revlist=parsed['revlist'],
                         before=parsed['before'], after=parsed['after'], author=parsed['author'],
                         github_url=parsed['github_url'])

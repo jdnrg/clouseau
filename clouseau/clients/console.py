@@ -1,6 +1,7 @@
-from abstract import AbstractClient
+from __future__ import absolute_import
+from .abstract import AbstractClient
 from jinja2 import Template, Environment, PackageLoader
-from colors import *
+from .colors import *
 import re
 import subprocess
 import sys

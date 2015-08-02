@@ -1,27 +1,28 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 from clouseau.clients import colors
 
 
 
 
-print dir( colors )
+print(dir( colors ))
 
 for c in colors.codes:
-    print colors.color( c, c )
+    print(colors.color( c, c ))
 
 
-print colors.ok()
-print colors.fail()
+print(colors.ok())
+print(colors.fail())
 
-print colors.ok( 'OK with text' )
-print colors.fail( 'Fail with text' )
+print(colors.ok( 'OK with text' ))
+print(colors.fail( 'Fail with text' ))
 
 
 print ('-------------------')
 
-print colors.gray('Gray Text')
+print(colors.gray('Gray Text'))
 
 
 

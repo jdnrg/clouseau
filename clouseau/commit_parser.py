@@ -1,14 +1,17 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 
 import os
 import sys
 import re
 import subprocess
 import pprint
-from clouseau_model import ClouseauModel
+from .clouseau_model import ClouseauModel
 
 
 # -----------------------------------------------------------------------------------------------
-class CommitParser:
+class CommitParser(object):
     """
     Converts git-show's stdout to Python dictionary for any commit messages and file changes that match the terms in the patterns files
     """
@@ -25,7 +28,7 @@ class CommitParser:
         for rev in revlist.strip().split(' '):
             output = self.get_commit(git_dir, rev)
             if output.strip() == '':
-                print "WARNING: No output was returned from git for commit [%s]. Ensure the commit exists" % rev
+                print("WARNING: No output was returned from git for commit [%s]. Ensure the commit exists" % rev)
             else:
                 self.parse_commit( terms, output, clouseau_model )
 
@@ -38,7 +41,7 @@ class CommitParser:
         git_show = subprocess.Popen(git_show_cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE) # , cwd=git_dir
         (out,err) = git_show.communicate()
         if err:
-            print "ERROR running git command [%s]: %s" % (git_show_cmd, err)
+            print("ERROR running git command [%s]: %s" % (git_show_cmd, err))
 
         return out
 

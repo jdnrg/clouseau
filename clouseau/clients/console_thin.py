@@ -1,4 +1,6 @@
-from abstract import AbstractClient
+from __future__ import print_function
+from __future__ import absolute_import
+from .abstract import AbstractClient
 from jinja2 import Template, Environment, PackageLoader
 
 class ConsoleThinClient(AbstractClient):
@@ -19,4 +21,4 @@ class ConsoleThinClient(AbstractClient):
         template = env.get_template('console_thin.html')
 
         data_to_render = template.render(data=data, has_matches=len(matches) > 0)
-        print data_to_render
+        print(data_to_render)
