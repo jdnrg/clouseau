@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 
 import os
 import sys
@@ -5,7 +7,7 @@ import re
 import subprocess
 
 # -----------------------------------------------------------------------------------------------
-class Parser:    
+class Parser(object):    
     """
     Converts git-grep's stdout to Python dictionary
     """
@@ -60,18 +62,18 @@ class Parser:
                                          stdout=subprocess.PIPE)
 
             (out,err) = git_grep.communicate()
-        
+            
             clouseau.update( {term: {}}  )
 
-            for line in out.split('\n'):
+            for line in out.split(b'\n'):
                 # We don't  know how a lot of the data is encoded, so make sure it's utf-8 before 
                 # processing
                 if line == '':
                     continue
                 try:
-                    line = unicode( line, 'utf-8' ) 
+                    line = str( line, 'utf-8' ) 
                 except UnicodeDecodeError:
-                    line = unicode( line, 'latin-1' ) 
+                    line = str( line, 'latin-1' ) 
                 
 
                 if file_name_heading.match( line ):
@@ -79,13 +81,13 @@ class Parser:
                     title = line.replace('/','_')
                     title = title.replace('.','_').strip()
                     _src = line.strip().encode('utf-8')
-                    _srca = _src.split(':', 1)
+                    _srca = _src.split(b':', 1)
                     clouseau[term][title] = {'src' : _srca[1] }
                     clouseau[term][title]['refspec'] =  _srca[0]
                     git_log_cmd = subprocess.Popen( ['git', '--git-dir', git_dir, 'log', _srca[0] , '-1'],\
                             stderr=subprocess.PIPE, stdout=subprocess.PIPE )
                     git_log = git_log_cmd.communicate()[0]
-                    clouseau[term][title]['git_log'] = [ x.strip() for x in git_log.split('\n') if x != '' ]
+                    clouseau[term][title]['git_log'] = [ x.strip() for x in git_log.split(b'\n') if x != '' ]
                     #clouseau[term][title] = {'ref' : _srca[0] }
                     clouseau[term][title]['matched_lines'] = []
                     continue

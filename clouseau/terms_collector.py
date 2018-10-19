@@ -1,9 +1,10 @@
+from builtins import object
 import os
 import sys
 
 
 # -----------------------------------------------------------------------------------------------
-class TermsCollector:
+class TermsCollector(object):
     """
     Collects all search terms from the patterns files
     """

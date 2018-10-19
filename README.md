@@ -16,6 +16,7 @@ See the **Get Involved** section at the end of this readme to see the current st
  - Unix-based OS, such as Mac or Linux (Windows support is unclear at this time.) 
  - [git](http://git-scm.com/)
  - [Python 2.7](https://www.python.org/download/releases/2.7/)
+ or [Python 3.4](https://www.python.org/downloads/release/python-343/)
  - [virtualenv](https://virtualenv.pypa.io/en/latest/)
  
 See the [requirements.txt](requirements.txt) file for additional dependencies to be installed in the quick setup.

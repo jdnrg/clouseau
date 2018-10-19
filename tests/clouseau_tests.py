@@ -54,7 +54,7 @@ def commit_parser_merge_only_test():
     terms = TermsCollector().collect_terms('clouseau/patterns/default.txt', None)
     model = ClouseauModel('https://github.com/cfpb/clouseau', terms)
     parser.parse_commit(terms, commit_output.read(), model)
-    exec_in_commit = model.model['exec'].keys()[0]
+    exec_in_commit = list(model.model['exec'].keys())[0]
     eq_(1, model.model['exec'][exec_in_commit]['matched_lines'][0][0])
     eq_('Commit Message', model.model['exec'][exec_in_commit]['src'])
 
