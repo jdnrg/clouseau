@@ -1,3 +1,4 @@
+.tox/
 *.clouseau
 *.swn
 *.egg-info
