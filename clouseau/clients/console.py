@@ -2,10 +2,12 @@ from __future__ import absolute_import
 from .abstract import AbstractClient
 from jinja2 import Template, Environment, PackageLoader
 from .colors import *
+import codecs
 import re
 import subprocess
 import sys
 import os
+import tempfile
 
 class ConsoleClient(AbstractClient):
     """
@@ -63,20 +65,18 @@ class ConsoleClient(AbstractClient):
                                     #m[1] = m[1].replace(term, orange_bg(term) )
 
 
-        
-        
-        data_to_render = template.render(data=data)
+        scratchfile_handle, scratchfile_path = tempfile.mkstemp()
+        rendered = template.render(data=data)
+
+        with codecs.open(scratchfile_path, 'w', 'utf-8') as scratchfile:
+            scratchfile.write(rendered)
         
         try:
-            pager = subprocess.Popen(['less', '-F', '-R', '-S', '-X', '-K'], stdin=subprocess.PIPE, stdout=sys.stdout)
-            lines = data_to_render.split('\n')
-            for line in lines:
-                pager.stdin.write( line.encode('utf-8') + '\n' )
-            pager.stdin.close()
-            pager.wait()
+            subprocess.call(['less', '-F', '-R', '-S', '-X', '-K'], stdin=scratchfile_handle)
         except KeyboardInterrupt:
             pass
-
+        finally:
+            os.remove(scratchfile_path)
 
 
 
