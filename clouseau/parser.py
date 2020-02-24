@@ -6,6 +6,20 @@ import sys
 import re
 import subprocess
 
+#import pprint
+import json
+
+
+def report(clouseau,term,title, output):
+    # pprint.pprint({ 'term' : term,
+    #             'title' : title,
+    #             'data': clouseau[term][title] })
+
+    json.dump({ 'term' : term,
+                'title' : title,
+                'data': clouseau[term][title] }, output)
+
+                    
 # -----------------------------------------------------------------------------------------------
 class Parser(object):    
     """
@@ -30,8 +44,11 @@ class Parser(object):
         author = kwargs.get( 'author' )
         github_url = kwargs.get( 'github_url' )
         git_dir = repo + '/.git'
+        #import pprint
+        print(kwargs.get('output_destination'))
+        output=open(kwargs.get('output_destination'),'w')
         
-        clouseau.update( {'meta' : {'github_url': github_url } } )
+        #clouseau.update( {'meta' : {'github_url': github_url } } )
 
         revs = self.generate_revlist( git_dir, revlist, before, after, author )
               
@@ -39,12 +56,14 @@ class Parser(object):
             #Need to build a more informative Nothing-found iterable
             return clouseau
         
-        clouseau = self.search( git_dir, terms, revs, clouseau )
+        clouseau = self.search( git_dir, terms, revs, clouseau, output )
+        output.close()
+        
         return clouseau
     
     
     
-    def search( self, git_dir, terms, revlist, clouseau ):
+    def search( self, git_dir, terms, revlist, clouseau , output):
         # Lexemes:
         file_name_heading = re.compile( '^[0-9a-zA-Z]{40}:.+$' )
         function_name = re.compile( '^[0-9]+=' )            
@@ -82,14 +101,16 @@ class Parser(object):
                     title = title.replace('.','_').strip()
                     _src = line.strip().encode('utf-8')
                     _srca = _src.split(b':', 1)
-                    clouseau[term][title] = {'src' : _srca[1] }
-                    clouseau[term][title]['refspec'] =  _srca[0]
+                    clouseau[term][title] = {'src' : _srca[1].decode('utf-8') }
+                    clouseau[term][title]['refspec'] =  _srca[0].decode('utf-8')
                     git_log_cmd = subprocess.Popen( ['git', '--git-dir', git_dir, 'log', _srca[0] , '-1'],\
                             stderr=subprocess.PIPE, stdout=subprocess.PIPE )
                     git_log = git_log_cmd.communicate()[0]
-                    clouseau[term][title]['git_log'] = [ x.strip() for x in git_log.split(b'\n') if x != '' ]
+                    clouseau[term][title]['git_log'] = [ x.strip().decode('utf-8') for x in git_log.split(b'\n') if x != '' ]
                     #clouseau[term][title] = {'ref' : _srca[0] }
                     clouseau[term][title]['matched_lines'] = []
+
+                    report(clouseau,term,title, output)
                     continue
 
                 if function_name.match( line ):
@@ -97,6 +118,7 @@ class Parser(object):
                     clouseau[term][title].update( {'function': function} ) 
                     #Node( type='function', value=function, parent=node )
                     clouseau[term][title].update( {'matches': len(function)} )
+                    report(clouseau,term,title, output)
                     continue
 
                 if matched_line.match( line ):
@@ -104,15 +126,13 @@ class Parser(object):
                     matched[0] = matched[0].strip()
                     matched[1] = matched[1].strip()
                     clouseau[term][title]['matched_lines'].append( matched )
+                    report(clouseau,term,title, output)
                     continue
                     #Node( type='matched_line', value=line.split(':',1), parent=node )
 
         return clouseau
     
-    
-    
-    
-    
+
     def generate_revlist(self, git_dir, revlist, before, after, author):
             rev_list = None
             #Default rev list

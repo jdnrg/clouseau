@@ -54,10 +54,10 @@ class Clouseau(object):
             parser = Parser()
             print("Going to scan" + args['repo_dir'])
             results = parser.parse( terms=terms, repo=args['repo_dir'], revlist=args['revlist'] ,
-                    before=args['before'], after=args['after'], author=args['author'], github_url=args['github_url'])
+                                    before=args['before'], after=args['after'], author=args['author'], github_url=args['github_url'], output_destination=args['output_destination'])
 
         # pprint.pprint(results)
-        client.render( terms, results )
+        #client.render( terms, results )
 
 
     def clone_repo(self, url, destination):
@@ -128,6 +128,7 @@ class Clouseau(object):
                  "repo_dir": args.dest,
                  "clean": args.clean,
                  "output_format": args.output_format,
+                 "output_destination": args.output_destination,
                  "dest": args.dest,
                  "patterns": args.patterns,
                  "revlist": args.revlist,
