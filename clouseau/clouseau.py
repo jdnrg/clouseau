@@ -52,6 +52,7 @@ class Clouseau(object):
             results = model.model
         else:
             parser = Parser()
+            print("Going to scan" + args['repo_dir'])
             results = parser.parse( terms=terms, repo=args['repo_dir'], revlist=args['revlist'] ,
                     before=args['before'], after=args['after'], author=args['author'], github_url=args['github_url'])
 
@@ -124,7 +125,7 @@ class Clouseau(object):
                  "github_url": github_url ,
                  "repo": repo,
                  "repo_name": repo_name,
-                 "repo_dir": ("%s/%s" % (args.dest,repo_name) ),
+                 "repo_dir": args.dest,
                  "clean": args.clean,
                  "output_format": args.output_format,
                  "dest": args.dest,
